@@ -41,7 +41,7 @@ echo "
 
 kubectl delete -f cluster-autoscaler-autodiscover.yaml
 
-eksctl delete iamserviceaccount --region=ap-southeast-2 --cluster=secretstore --namespace=default --name=nginx-deployment-sa 
+eksctl delete iamserviceaccount --region=$REGION --cluster=$CLUSTER --namespace=default --name=nginx-deployment-sa 
 
 kubectl  -n kube-system describe sa nginx-deployment-sa
 
@@ -88,16 +88,13 @@ addons:
 iam:
   withOIDC: true
 
-iamIdentityMappings:
-  - arn: arn:aws:iam::$ACC:user/Ali
-    groups:
-      - system:masters
-    username: admin-Ali
-  - arn: arn:aws:iam::$ACC:role/Admin
-    groups:
-      - system:masters
-    username: isengard-Ali
-    noDuplicateARNs: true # prevents shadowing of ARNs
+#iamIdentityMappings:
+#  - arn: arn:aws:iam::$ACC:user/Ali
+#    groups:
+#      - system:masters
+#    username: admin-Ali
+#  - arn: arn:aws:iam::$ACC:role/Admin
+
 
 cloudWatch:
   clusterLogging:
@@ -236,7 +233,7 @@ spec:
       containers:
       - name: nginx-deployment
         image: nginx
-        command: ["sh" , "-c" , "while true ; do  date ; cat /mnt/secrets-store/mysecret ; sleep 60 ; done" ]
+        command: ["sh" , "-c" , "while true ; do  date ; cat /mnt/secrets-store/mysecret ;hostname ;  echo ; sleep 60 ; done" ]
         ports:
         - containerPort: 80
         volumeMounts:
